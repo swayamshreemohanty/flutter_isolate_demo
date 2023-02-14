@@ -1,3 +1,6 @@
+import 'dart:isolate';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,6 +16,21 @@ class CalculatorScreen extends StatefulWidget {
 class _CalculatorScreenState extends State<CalculatorScreen> {
   final numberTextController = TextEditingController();
   int lastEnteredNumber = 0;
+
+  ReceivePort registerReceivePort = ReceivePort();
+  @override
+  void initState() {
+    ///register a send port for the other isolates
+    IsolateNameServer.registerPortWithName(
+        registerReceivePort.sendPort, "downloading");
+
+    ///Listening for the data is comming other isolataes
+    registerReceivePort.listen((message) {
+      print("CHECKING WITH REGISTER PORT");
+      print(message);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

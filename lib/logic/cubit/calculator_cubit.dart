@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:isolate';
+import 'dart:ui';
 import 'package:flutter_bloc/flutter_bloc.dart';
 part 'calculator_state.dart';
 
@@ -20,9 +21,19 @@ class CalculatorCubit extends Cubit<CalculatorState> {
 
     //
     responsePort.listen((response) {
+      //Only for testing
+      ///Looking up for a send port
+      SendPort sendLookUpPort =
+          IsolateNameServer.lookupPortByName("downloading")!;
+
+      ///sending the data to the screen
+      sendLookUpPort.send(response);
+
       emit(state.copyWith(number: response));
     });
+
     //
+
     sendPort.send([number, responsePort.sendPort]);
   }
 
@@ -36,6 +47,7 @@ class CalculatorCubit extends Cubit<CalculatorState> {
 
       // Return the result to the main isolate
       final sum = calculate(data);
+
       responsePort.send(sum);
     });
   }
@@ -45,7 +57,7 @@ class CalculatorCubit extends Cubit<CalculatorState> {
     int sum = 0;
     for (var i = 0; i <= number; i++) {
       sum += i;
-      print(sum);
+      // print(sum);
     }
     return sum;
   }

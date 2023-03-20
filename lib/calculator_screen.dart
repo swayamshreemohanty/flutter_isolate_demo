@@ -22,12 +22,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   void initState() {
     ///register a send port for the other isolates
     IsolateNameServer.registerPortWithName(
-        registerReceivePort.sendPort, "downloading");
+        registerReceivePort.sendPort, "calculate");
 
     ///Listening for the data is comming other isolataes
     registerReceivePort.listen((message) {
-      print("CHECKING WITH REGISTER PORT");
-      print(message);
+      final number = int.tryParse(message.toString()) ?? 0;
+      context.read<CalculatorCubit>().emitNumber(number);
     });
     super.initState();
   }
@@ -73,6 +73,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                             .read<CalculatorCubit>()
                             // .calculateSumOnMainThread(lastEnteredNumber);
                             .calculateSumOnSeparateIsolate(lastEnteredNumber);
+                        // .calculateSumUsingCompute(lastEnteredNumber);
                         //
                         //reset controller
                         numberTextController.clear();

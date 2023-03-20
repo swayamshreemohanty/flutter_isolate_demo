@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'calculator_cubit.dart';
 
-class CalculatorState {
+class CalculatorState extends Equatable {
   final int number;
   final bool isLoading;
 
@@ -16,4 +16,7 @@ class CalculatorState {
       isLoading: isLoading ?? false,
     );
   }
+
+  @override
+  List<Object?> get props => [number, isLoading];
 }

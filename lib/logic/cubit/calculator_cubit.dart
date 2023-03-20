@@ -61,9 +61,13 @@ class CalculatorCubit extends Cubit<CalculatorState> {
   }
 
   static int calculate(int number) {
+    //find for the registered isolate
+    final sendLookUpPort = IsolateNameServer.lookupPortByName("calculate");
+
     // Perform some calculations using the received data
     int sum = 0;
-    final sendLookUpPort = IsolateNameServer.lookupPortByName("calculate");
+
+    //start the calculation
     for (var i = 0; i <= number; i++) {
       sum += i;
 
@@ -71,7 +75,6 @@ class CalculatorCubit extends Cubit<CalculatorState> {
       if (sendLookUpPort != null) {
         sendLookUpPort.send(sum);
       }
-      // print(sum);
     }
     return sum;
   }
